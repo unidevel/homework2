@@ -46,6 +46,9 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
     { publicPath: Array(cssFilename.split('/').length).join('../') }
   : {};
 
+
+  console.log('xxxxxxxxxxxxxxxxxxxxxxxxx');
+
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
@@ -172,6 +175,7 @@ module.exports = {
                 {
                   fallback: require.resolve('style-loader'),
                   use: [
+                    { loader: require.resolve('isomorphic-style-loader') },
                     {
                       loader: require.resolve('css-loader'),
                       options: {

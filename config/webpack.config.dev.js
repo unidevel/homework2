@@ -12,6 +12,9 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+console.log('-------------------');
+
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -160,12 +163,17 @@ module.exports = {
           // in development "style" loader enables hot editing of CSS.
           {
             test: /\.css$/,
+            include: paths.appSrc,
             use: [
-              require.resolve('style-loader'),
+              { loader: require.resolve('isomorphic-style-loader') },
               {
                 loader: require.resolve('css-loader'),
                 options: {
+                  modules: true,
                   importLoaders: 1,
+                  localIdentName: '[name]_[local]_[hash:base64:3]',
+                  allowMultiple: true,
+                  sourceMap: true
                 },
               },
               {
@@ -174,7 +182,8 @@ module.exports = {
                   // Necessary for external CSS imports to work
                   // https://github.com/facebookincubator/create-react-app/issues/2677
                   ident: 'postcss',
-                  plugins: () => [
+                  plugins: (ctx) => [
+                    require('postcss-import')({ addDependencyTo: ctx }),
                     require('postcss-flexbugs-fixes'),
                     autoprefixer({
                       browsers: [
@@ -185,6 +194,7 @@ module.exports = {
                       ],
                       flexbox: 'no-2009',
                     }),
+                    require('autoprefixer')({ browsers: AUTOPREFIXER_BROWSERS }),
                   ],
                 },
               },
@@ -262,3 +272,4 @@ module.exports = {
     hints: false,
   },
 };
+
